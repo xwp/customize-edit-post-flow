@@ -9,6 +9,7 @@
 	function followEditLinks() {
 		$( 'body' ).on( 'click', '.post-edit-link', function( event ) {
 			api.preview.send( 'edit-post', event.target.href );
+			$( this ).css( 'cursor', 'progress' );
 		} );
 	}
 
