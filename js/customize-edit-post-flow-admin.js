@@ -42,6 +42,8 @@
 		$( window ).off( 'beforeunload.customize-confirm' );
 	}
 
-	api.bind( 'ready', () => api.previewer.bind( 'edit-post', api.postEditRedirect ) );
+	api.bind( 'ready', function() {
+		api.previewer.bind( 'edit-post', api.postEditRedirect );
+	} );
 
 })( this.wp, this.jQuery );
