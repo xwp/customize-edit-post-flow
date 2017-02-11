@@ -1,31 +1,42 @@
 (function( wp, $ ) {
 	var api = wp.customize;
 
+	/**
+	 * Redirect to the post edit screen.
+	 *
+	 * @link https://github.com/xwp/wp-customize-snapshots/issues/101
+	 * @param {string} url Edit post link.
+	 */
 	api.postEditRedirect = function postEditRedirect( url ) {
-		if ( api.state( 'saved' ).get() ) {
-			redirectWithReturn( url );
-		}
+		var urlParser = document.createElement( 'a' ), onceProcessingComplete;
+		urlParser.href = url;
 
-		if ( ! api.state( 'changesetStatus' ).get() ) {
-			api.state( 'changesetStatus' ).bind( ( newStatus ) => {
-				if ( newStatus = 'auto-draft' ) {
-					unbindAYS();
-					redirectWithReturn( url );
-				}
-			});
+		if ( urlParser.search ) {
+			urlParser.search += '&';
+		}
+		urlParser.search += 'customizer_return=' + encodeURIComponent( window.location.href );
+
+		onceProcessingComplete = function() {
+			var request;
+			if ( api.state( 'processing' ).get() > 0 ) {
+				return;
+			}
+
+			api.state( 'processing' ).unbind( onceProcessingComplete );
+
+			request = api.requestChangesetUpdate();
+			request.done( function() {
+				unbindAYS();
+				window.location.href = urlParser.href;
+			} );
+		};
+
+		if ( 0 === api.state( 'processing' ).get() ) {
+			onceProcessingComplete();
 		} else {
-			redirectWithReturn( url );
+			api.state( 'processing' ).bind( onceProcessingComplete );
 		}
-	}
-
-	function addCustomizerReturnUrl( url ) {
-		var sep = ( url.indexOf( '?' ) >= 0 ) ? '&' : '?';
-		return url + sep + 'customizer_return=' + encodeURIComponent( window.location.href );
-	}
-
-	function redirectWithReturn( url ) {
-		window.location = addCustomizerReturnUrl( url );
-	}
+	};
 
 	function unbindAYS() {
 		$( window ).off( 'beforeunload.customize-confirm' );
