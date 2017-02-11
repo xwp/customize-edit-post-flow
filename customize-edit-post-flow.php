@@ -148,7 +148,7 @@ class WP_Customize_Post_Edit_Flow {
 
 		// If we just came from the Customizer, show a notice of state
 		if ( $this->did_get_refered_from_customizer() ) {
-			$message = __( 'After you finish editing, you can return to customizing your site\'s appearance.' );
+			$message = __( 'After you finish editing, you can return to customizing your site\'s appearance. Please be aware that the changes you save here will go live right away without being previewed and published with your other customizations.' );
 			$message .= ' ';
 			$message .= sprintf( '<a href="%s">%s</a>', esc_url( $customizer_return ), __( 'Go back to customizing your site.' ) );
 		} else {
