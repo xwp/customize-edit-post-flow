@@ -110,12 +110,16 @@ class WP_Customize_Post_Edit_Flow {
 			return;
 		}
 
+		$customizer_return = wp_unslash( $_REQUEST['customizer_return'] );
+
 		// If we just came from the Customizer, show a notice of state
 		if ( $this->did_get_refered_from_customizer() ) {
 			$message = __( 'After you finish editing, you can return to customizing your site\'s appearance.' );
+			$message .= ' ';
+			$message .= sprintf( '<a href="%s">%s</a>', esc_url( $customizer_return ), __( 'Go back to customizing your site.' ) );
 		} else {
 			// otherwise, we're ready to go back.
-			$message = sprintf( ' <a href="%s">%s</a>', esc_url( wp_unslash( $_REQUEST['customizer_return'] ) ), __( 'Continue customizing your site.' ) );
+			$message = sprintf( '<a href="%s">%s</a>', esc_url( $customizer_return ), __( 'Continue customizing your site.' ) );
 		}
 		echo '<div class="notice notice-warning is-dismissible"><p>' . $message . '</p></div>';
 	}
