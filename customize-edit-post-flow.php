@@ -47,10 +47,28 @@ class WP_Customize_Post_Edit_Flow {
 		add_filter( 'redirect_post_location', array( $this, 'maybe_add_return_to_redirect' ) );
 		add_action( 'edit_form_top', array( $this, 'maybe_add_hidden_field' ) );
 
+		add_action( 'admin_print_styles', array( $this, 'admin_enqueue_scripts' ), 100 );
+
 		// @todo Only do these on the edit post screen.
 		add_filter( 'post_link', array( $this, 'filter_permalink' ) );
 		add_filter( 'post_type_link', array( $this, 'filter_permalink' ) );
 		add_filter( 'page_link', array( $this, 'filter_permalink' ) );
+	}
+
+	public function admin_enqueue_scripts() {
+		if ( ! $this->has_customizer_return() ) {
+			return;
+		}
+		?>
+		<style>
+			#wpcontent {
+				margin-left: 0;
+			}
+			#wpadminbar, #adminmenuwrap, #adminmenuback, #wpfooter {
+				display: none;
+			}
+		</style>
+		<?php
 	}
 
 	public function maybe_add_hidden_field() {
