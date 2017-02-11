@@ -110,15 +110,12 @@ class WP_Customize_Post_Edit_Flow {
 			return;
 		}
 
-		$post_object = get_post_type_object( get_post()->post_type );
-
 		// If we just came from the Customizer, show a notice of state
 		if ( $this->did_get_refered_from_customizer() ) {
-			$message = sprintf( __( 'After you finish editing this %s, you can return to customizing your site\'s appearance.'  ), $post_object->labels->singular_name );
+			$message = __( 'After you finish editing, you can return to customizing your site\'s appearance.' );
 		} else {
 			// otherwise, we're ready to go back.
-			$message = sprintf( __( 'You edited your %s!' ), $post_object->labels->singular_name );
-			$message .= sprintf( ' <a href="%s">%s</a>', esc_url( $_REQUEST['customizer_return'] ), __( 'Continue customizing your site.' ) );
+			$message = sprintf( ' <a href="%s">%s</a>', esc_url( $_REQUEST['customizer_return'] ), __( 'Continue customizing your site.' ) );
 		}
 		echo '<div class="notice notice-warning is-dismissible"><p>' . $message . '</p></div>';
 	}
