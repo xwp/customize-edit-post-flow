@@ -59,7 +59,7 @@ class WP_Customize_Post_Edit_Flow {
 	public function maybe_add_return_to_redirect( $location ) {
 		if ( isset( $_POST['customizer_return'] ) ) {
 			// todo verify _return_to_customizer_url
-			$location = add_query_arg( 'customizer_return', wp_unslash( $_POST['customizer_return'] ), $location );
+			$location = add_query_arg( 'customizer_return', urlencode( wp_unslash( $_POST['customizer_return'] ) ), $location );
 		}
 		return $location;
 	}
