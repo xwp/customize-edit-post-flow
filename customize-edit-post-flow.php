@@ -49,17 +49,17 @@ class WP_Customize_Post_Edit_Flow {
 	}
 
 	public function maybe_add_hidden_field() {
-		if ( ! isset( $_GET['customizer_return'] ) || ! $this->is_customizer_url( $_GET['customizer_return'] ) ) {
+		if ( ! isset( $_GET['customizer_return'] ) || ! $this->is_customizer_url( wp_unslash( $_GET['customizer_return'] ) ) ) {
 			return;
 		}
 
-		printf( '<input type="hidden" name="%s" value="%s" />', 'customizer_return', esc_attr( $_GET['customizer_return'] ) );
+		printf( '<input type="hidden" name="%s" value="%s" />', 'customizer_return', esc_attr( wp_unslash( $_GET['customizer_return'] ) ) );
 	}
 
 	public function maybe_add_return_to_redirect( $location ) {
 		if ( isset( $_POST['customizer_return'] ) ) {
 			// todo verify _return_to_customizer_url
-			$location = add_query_arg( 'customizer_return', $_POST['customizer_return'], $location );
+			$location = add_query_arg( 'customizer_return', wp_unslash( $_POST['customizer_return'] ), $location );
 		}
 		return $location;
 	}
@@ -91,7 +91,7 @@ class WP_Customize_Post_Edit_Flow {
 			return false;
 		}
 
-		return $this->is_customizer_url( $_REQUEST['customizer_return'] );
+		return $this->is_customizer_url( wp_unslash( $_REQUEST['customizer_return'] ) );
 	}
 
 	private function is_customizer_url( $url ) {
@@ -115,7 +115,7 @@ class WP_Customize_Post_Edit_Flow {
 			$message = __( 'After you finish editing, you can return to customizing your site\'s appearance.' );
 		} else {
 			// otherwise, we're ready to go back.
-			$message = sprintf( ' <a href="%s">%s</a>', esc_url( $_REQUEST['customizer_return'] ), __( 'Continue customizing your site.' ) );
+			$message = sprintf( ' <a href="%s">%s</a>', esc_url( wp_unslash( $_REQUEST['customizer_return'] ) ), __( 'Continue customizing your site.' ) );
 		}
 		echo '<div class="notice notice-warning is-dismissible"><p>' . $message . '</p></div>';
 	}
