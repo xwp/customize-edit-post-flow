@@ -46,6 +46,11 @@ class WP_Customize_Post_Edit_Flow {
 		add_action( 'edit_form_top', array( $this, 'post_edit_notice' ) );
 		add_filter( 'redirect_post_location', array( $this, 'maybe_add_return_to_redirect' ) );
 		add_action( 'edit_form_top', array( $this, 'maybe_add_hidden_field' ) );
+
+		// @todo Only do these on the edit post screen.
+		add_filter( 'post_link', array( $this, 'filter_permalink' ) );
+		add_filter( 'post_type_link', array( $this, 'filter_permalink' ) );
+		add_filter( 'page_link', array( $this, 'filter_permalink' ) );
 	}
 
 	public function maybe_add_hidden_field() {
@@ -102,6 +107,17 @@ class WP_Customize_Post_Edit_Flow {
 		}
 
 		return admin_url( 'customize.php' ) === sprintf( '%s://%s%s', $parsed['scheme'], $parsed['host'], $parsed['path'] );
+	}
+
+	public function filter_permalink( $url ) {
+		if ( ! $this->has_customizer_return() ) {
+			return $url;
+		}
+
+		$customizer_return = wp_unslash( $_REQUEST['customizer_return'] );
+		$customizer_return = add_query_arg( 'url', $url, $customizer_return );
+
+		return $customizer_return;
 	}
 
 	public function post_edit_notice() {
